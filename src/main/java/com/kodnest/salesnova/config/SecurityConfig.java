@@ -1,6 +1,5 @@
 package com.kodnest.salesnova.config;
 
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -16,7 +15,7 @@ import java.util.List;
 
 /**
  * ─────────────────────────────────────────────────────────────────
- *  CartNest — Security + CORS Configuration
+ *  SalesNova — Security + CORS Configuration
  *
  *  IMPORTANT: Do NOT create a separate CorsConfig.java.
  *  When Spring Security is present, it intercepts requests before
@@ -33,7 +32,8 @@ public class SecurityConfig {
         "http://localhost:5173",                                           // Vite dev
         "http://localhost:3000",                                           // alt dev
         "http://localhost:8080",                                           // your dev
-        "https://cartnest-sigma.vercel.app",                              // production
+        "https://nova-cart-gray.vercel.app",                              // ✅ YOUR PRODUCTION FRONTEND
+        "https://cartnest-sigma.vercel.app",                              // old production
         "https://cartnest-git-master-shaikh-shazebs-projects.vercel.app"  // preview
     );
 
@@ -42,7 +42,6 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             // Hand CORS to our corsConfigurationSource() bean below
-            // This is the critical line — NOT http.cors() with no arguments
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
             // Disable CSRF — REST APIs are stateless, no cookie sessions
@@ -54,7 +53,7 @@ public class SecurityConfig {
 
             // Route permissions
             .authorizeHttpRequests(auth -> auth
-                // OPTIONS must always be permitted — this is the browser preflight
+                // OPTIONS must always be permitted — browser preflight
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                 // Public endpoints — no token needed
@@ -90,7 +89,7 @@ public class SecurityConfig {
             "X-Requested-With"
         ));
 
-        // Required if you ever send cookies or Authorization headers
+        // Required when sending cookies or Authorization headers
         config.setAllowCredentials(true);
 
         // Browser caches the preflight response for 1 hour
